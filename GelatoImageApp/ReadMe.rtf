@@ -1,0 +1,69 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww27000\viewh19280\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs36 \cf0 This project includes following features:\
+- TDD approach to drive the development\
+- Get list of photos\
+- Displaying them in UICollectionView gallery. (Number of items in row are configurable based on the requirement in UI)\
+- User can tap photo to view it\
+- User can zoom the big downloaded picture\
+- User can infinite scroll the page\
+- UnitTests of main modules of the application\
+- Snapshot Tests of main UI to demonstrate the testing\
+- Download images from server\
+- Cache of Images in document directory\
+- User can share photo using default iOS Share sheet\
+\
+\
+Composition Layer:\
+All controllers and components in the application are configurable. Hence this is the most critical layer to make sure everything wired well. It can be tested using UIViewController integration tests. (Have not written those as of now)\
+\
+Networking:\
+	HTTPSessionClient: Calls api to load data from the server and conform to one protocol which is HTTPClient\
+\
+RemoteLoader\
+	RemoteLoader: Generic Loaded that uses api from fetch data from url\
+\
+Helper: \
+	LoaderTask: A task callback which can be hold by anyone to cancel this task in future (This task is used by multiple modules) \
+\
+ImageItemParser\
+	ImageItem: Model to save ImageItem response from API\
+	ImageItemLoader: Protocol to load image from RemoteLoader\
+	ImageItemParser: Parsing logic injected in RemoteLoader to transform response to model by handling errors and codable logic\
+\
+LocalImageItemLoader:\
+	LocalImageItemLoader: Load Image from Local storage (used Userdefaults here to show-case different storages) but we can use LocalFileStore too (Will just need to changes this layer for that)\
+	ImageItemStorage: Protocol to store image url list response locally\
+\
+ImageItemLoaderDecorator: Inject Side-Effects\
+	ImageItemLoaderCacheDecorator: To inject caching logic of api response which is downloaded from server\
+	ImageItemLoaderFallbackDecorator: To load api response remote ImageItemLoader if response does not exist in local storage\
+\
+ImageLoader:\
+	ImageDataLoader: Protocol to download images\
+	ImageDataParser: Parsing logic that is injected in RemoteLoader to convert handle failure cases in response parsing\
+	ImageDataCompressionLoader: Loading Heavy images in UICollectionView hangs the UI in rendering phases. hence downscaled the UI using this protocol\
+	Storage:\
+		LocalFileStore: Save any data in File\
+		ImageDataStorage: Protocol to save image in store\
+	LocalImageDataDownloader: Download Image from Local File Store and save it to server\
+	Decorator: Inject Side-Effects\
+		ImageDataLoaderCacheDecorator: To inject caching logic once image is downloaded from server\
+		ImageDataLoaderFallbackDecorator: To load image from remote ImageDataLoader if image does not exist in local storage\
+\
+\
+View: Contains ImageListViewController dependencies that come together to show different UI on the screen\
+	ImageCollectionViewCell: CollectionViewCell displaying image on the UI\
+     ImageListViewController: This is the main UIViewController that contains UICollectionView and display images in the screen\
+     ImageListCellController: Helper to create cell from viewModel\'92s image. One viewController can contain multiple controllers (This helps to separate ViewController from presenter and viewModel dependencies)\
+	ShareImageController: Similar to above it\'92s also a controller to show full image on the screen with share action\
+\
+Presentation:\
+	ImageListPresenter: Main Presenter to drive UI in the View\
+	ViewModel: Contains ViewModel that are displayed on the screen\
+	ImageListPresenterOutput: Protocol conform by the class which will use this presenter and wants to listen to its messages}
