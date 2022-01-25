@@ -1,0 +1,54 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2580
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 Helvetica-Bold;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww30020\viewh19080\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs36 \cf0 This project includes following features:\
+- It\'92s developed using Xcode 13.2 and minimum deployment target as iOS 14.0\
+- TDD approach to drive the development using MVVM\
+- Get Current WeatherInfo using OpenWeather API for a specific city that user has searched for in searchBar\
+- Display Main weather, temperature, wind speed and sunrise/sunset timings in the SwiftUI list\
+- Weather data is fetched as soon as the user starts typing.\
+\
+Note: Didn\'92t use the daily forecast weather API as it was not available under free plan and was throwing 401 for the valid apiKey.\
+\
+MainAppView:\
+     WeatherAppApp: It\'92s the main view of the app created by default on creating the project that contains the WeatherListView composed using WeatherListViewComposer\
+\
+
+\f1\b Networking
+\f0\b0 :\
+	HTTPSessionClient: Calls api to load data from the server and conform to one protocol which is HTTPClient\
+\
+
+\f1\b WeatherManager
+\f0\b0 \
+	Remote WeatherManager: Loads the current weatherInfo for the provided city. It uses some internal classes such as WeatherAPIConstants that contains information regarding the weather api.\
+      WeatherDataModel: It contains model object that is parsed from API. Some parameters are taken optional in the model to make sure that parsing in done correctly. \
+      WeatherInfoParser: Created this as enum as its instance is not required and it contains just the method to parse API response  and map data to WeatherInfo model response.\
+\
+
+\f1\b Helper
+\f0\b0 : \
+	URL+QueryParameter: Extension to append query parameters in the API before making the api call\
+      DateParser: Singleton class to parse date in the complete application as it contains DateFormatter as it\'92s claimed to be expensive to create its new instances\
+\
+
+\f1\b ListModule
+\f0\b0 :\
+     WeatherListViewComposer: It composes the WeatherListViewModel using WeatherManager and injects that in WeatherListView\
+	
+\f1\b ViewModel
+\f0\b0 :\
+		WeatherListViewModel: Main ViewModel that View observes and react to the changes. It contains listVM to display data in the view and cityName which is the location that user is searching for in searchBar\
+		WeatherRowViewModel: It\'92s the single item viewModel that is displayed in the list. It\'92s parsed from WeatherInfo data to be displayed in the UI\
+		WeatherRowViewModelParser: It\'92s an enum as it just contains static method to parse WeatherInfo to a list of WeatherRowViewModel objects that is displayed in SwiftUI list\
+	
+\f1\b View
+\f0\b0 :\
+		WeatherListView: This UI contains searchBar and a list to display weather data in the UI\
+		SearchBar: CustomView with textfield that is displayed on the top of the screen\
+		WeatherRowView: It\'92s the single item view in the list t display the weather information from WeatherRowViewModel.\
+		}
